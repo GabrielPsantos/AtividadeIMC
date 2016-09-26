@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">  
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="js/ui-mask.js" type="text/javascript"></script>
+<style type="text/css">
+		body{
+			font-family: 'tahoma';
+		}
+		#calculo{
+			margin:20px;
+		}
+		.form-group{
+			margin:0 20px 0 20px;
+		}
+		#btnCalcula,#btnLimpa{
+			-webkit-box-shadow: 6px 6px 5px 0px rgba(0,0,0,0.75);
+			-moz-box-shadow: 6px 6px 5px 0px rgba(0,0,0,0.75);
+			box-shadow: 6px 6px 5px 0px rgba(0,0,0,0.75);
+		}
+		body{
+			background-image: url('img/website-background-pattern.jpg');
+		}
+		</style>
+	
+<body>
+		<div class="jumbotron text-center">
+			<div class="container" ng-app="myApp" ng-controller="myCtrl">
+					<div class="row">
+						<div id="calculo">
+							<h1 id="titulo">Calculo de IMC</h1>
+							<div class="form-group">
+								<label>Peso(kg): </label>
+								<input type="text" id="peso" class="form-control" ui-mask="99.99"  ng-model="peso"><br>
+							</div>
+							<div class="form-group">
+								<label>Altura(m):</label>
+								<input id="altura" type="text" class="form-control" ui-mask="9.99"  ng-model="altura"><br>
+							</div>
+							<button id="btnCalcula" class="btn btn-primary btn-lg btn-block"   ng-click="calculaPeso()">Calcula IMC</button>
+							<br>
+							<button id="btnLimpa" class="btn btn-danger btn-lg text-center"  ng-click="limpaCampo()">Limpar Campos</button>
+						</div>
+						<br>
+						<h3 class="msg1">{{mensagem}}</h3>
+						<br>
+						<h2 class="msg2">{{mensagemDesc}}</h2>
+					</div>
+			</div>
+		</div>
+
+
+
+
+<script>
+var app = angular.module('myApp', ['ui.mask']);
+app.controller('myCtrl', function($scope) {
+	$this = $scope;
+
+	$this.peso = "";
+    $this.altura = "";
+    $this.imc = "";
+
+    $this.calculaPeso = function(){
+
+
+
+    		$this.valid = true;
+    		if($this.peso <= 0){
+    			$this.mensagem = "O Peso deve ser maior que zero !";
+    			$this.valid = false;
+    		}
+    		if($this.altura <= 0){
+    			$this.mensagem = "A altura deve ser maior que zero !";
+				$this.valid = false;
+			}
+			if(isNaN($this.peso) || isNaN($this.altura)){
+    			$this.mensagem = "Digite Somente Numeros!";
+    			$this.valid = false;
+    		}
+    		if($this.valid){
+    				$this.altura = $this.altura/100;
+    				$this.peso = $this.peso/100;
+    				$this.imc = $this.peso/($this.altura * this.altura);
+    				$this.imc = $this.imc.toFixed(2);
+    				
+    				$this.mensagem = "O Resultado do Seu IMC é : "+$this.imc;
+
+    				if($this.imc < 18.5)
+						$this.mensagemDesc = "Você está abaixo do peso recomendado.";
+    				else if($this.imc >= 18.5 && $this.imc <= 25)
+						$this.mensagemDesc = "Você está muito bem! Continue assim!";
+					else if($this.imc > 25 && $this.imc <= 30)
+						$this.mensagemDesc = "Você está acima do peso recomendado. Cuidado!";
+					else if($this.imc > 30)
+						$this.mensagemDesc = "Você está Obeso. Procure o acompanhamento de um nutricionista e realizar mais atividades físicas!";
+			}
+			$this.peso = "";
+			$this.altura = "";
+		}
+
+		$this.limpaCampo = function(){
+			$this.mensagem = "";
+			$this.mensagemDesc = "";
+			$this.imc = "";
+			$this.peso = "";
+			$this.altura = "";
+		}
+
+
+});
+</script>
+
+</body>
+</html>
+
